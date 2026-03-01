@@ -1,0 +1,61 @@
+# ===========================================
+# Weather App - Safe for GitHub
+# ===========================================
+
+# --- Secrets & environment (API keys, tokens) ---
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.*.local
+*.pem
+secrets.json
+config.local.*
+credentials.*
+
+# --- OS files ---
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# --- Editor / IDE ---
+.idea/
+.vscode/
+.cursor/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# --- Dependencies ---
+node_modules/
+bower_components/
+vendor/
+
+# --- Build & output ---
+dist/
+build/
+out/
+*.min.js
+*.min.css
+*.map
+
+# --- Logs & temp ---
+*.log
+npm-debug.log*
+.cache/
+tmp/
+temp/
+*.tmp
+*.temp
+
+# --- Archives (avoid accidental uploads) ---
+*.zip
+*.tar.gz
+*.rar
