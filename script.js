@@ -29,12 +29,10 @@ button.addEventListener("click", () => {
 });
 
 async function getWeather(city) {
-  // UI: start loading
   statusDiv.textContent = "Loading...";
   statusDiv.className = "is-loading";
   button.disabled = true;
 
-  // Optional: make the button text show loading state
   const originalBtnText = button.textContent;
   button.textContent = "Loading...";
 
@@ -76,12 +74,11 @@ async function getWeather(city) {
     const temperature = weatherData.current_weather.temperature;
     const windSpeed = weatherData.current_weather.windspeed;
 
-    // 3) Display weather (move useful info into the card)
+    // 3) Show the result in the card
     titleEl.textContent = `${name} Weather`;
     tempDiv.textContent = `${temperature}°F`;
     detailsDiv.textContent = `${name}, ${country} • Wind: ${windSpeed} mph`;
 
-    // Keep status short and clean
     statusDiv.textContent = "Ready";
     statusDiv.className = "";
   } catch (error) {
@@ -91,7 +88,6 @@ async function getWeather(city) {
     titleEl.textContent = "Weather App";
     detailsDiv.textContent = "Please try again in a moment.";
   } finally {
-    // UI: end loading
     button.disabled = false;
     button.textContent = originalBtnText;
   }
