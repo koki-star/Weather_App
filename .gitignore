@@ -1,8 +1,6 @@
-# ===========================================
-# Weather App - Safe for GitHub
-# ===========================================
+# Files that should stay out of the repository.
 
-# --- Secrets & environment (API keys, tokens) ---
+# Secrets and environment files
 .env
 .env.local
 .env.development
@@ -14,7 +12,7 @@ secrets.json
 config.local.*
 credentials.*
 
-# --- OS files ---
+# OS files
 .DS_Store
 .DS_Store?
 ._*
@@ -22,7 +20,7 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
-# --- Editor / IDE ---
+# Editor and IDE
 .idea/
 .vscode/
 .cursor/
@@ -33,12 +31,12 @@ Desktop.ini
 .classpath
 .settings/
 
-# --- Dependencies ---
+# Dependencies
 node_modules/
 bower_components/
 vendor/
 
-# --- Build & output ---
+# Build output
 dist/
 build/
 out/
@@ -46,7 +44,7 @@ out/
 *.min.css
 *.map
 
-# --- Logs & temp ---
+# Logs and temp files
 *.log
 npm-debug.log*
 .cache/
@@ -55,7 +53,7 @@ temp/
 *.tmp
 *.temp
 
-# --- Archives (avoid accidental uploads) ---
+# Archives
 *.zip
 *.tar.gz
 *.rar
