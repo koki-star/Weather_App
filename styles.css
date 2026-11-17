@@ -50,13 +50,14 @@ label {
   transition: border-color 0.2s;
 }
 
-#cityInput:focus {
-  outline: none;
-  border-color: #3b82f6;
+#cityInput:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+  border-color: #1d4ed8;
 }
 
 #cityInput::placeholder {
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 #weatherCard {
@@ -90,7 +91,7 @@ label {
 }
 
 #status.is-loading {
-  color: #9ca3af;
+  color: #6b7280;
   font-style: italic;
 }
 
@@ -105,7 +106,7 @@ label {
   font-size: 1rem;
   font-weight: 600;
   color: #fff;
-  background-color: #3b82f6;
+  background-color: #2563eb;
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -113,11 +114,11 @@ label {
 }
 
 #getWeatherBtn:hover {
-  background-color: #2563eb;
+  background-color: #1d4ed8;
 }
 
 #getWeatherBtn:active {
-  background-color: #1d4ed8;
+  background-color: #1e40af;
 }
 
 @media (max-width: 480px) {

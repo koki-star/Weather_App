@@ -2,6 +2,8 @@
 
 College assignment (Application Development, North Seattle College). A one-page weather app in plain HTML, CSS, and JavaScript. You type a city name and it shows the current temperature and wind speed.
 
+Live demo: https://koki-star.github.io/Weather_App/
+
 The app calls the Open-Meteo geocoding API to turn the city name into latitude and longitude, then calls the Open-Meteo forecast API with those coordinates.
 
 ## Features
@@ -10,6 +12,7 @@ The app calls the Open-Meteo geocoding API to turn the city name into latitude a
 * Temperature in Fahrenheit and wind speed in mph
 * Seattle loads by default when the page opens
 * Loading state while a request is running
+* Press Enter or click the button to search
 * Error messages for blank input, unknown city, and failed requests
 
 ## How it works
@@ -25,6 +28,10 @@ The app calls the Open-Meteo geocoding API to turn the city name into latitude a
 * CSS
 * JavaScript (async/await, fetch)
 * Open-Meteo API (no API key needed)
+
+## Credit
+
+Weather data by [Open-Meteo.com](https://open-meteo.com/), used under the [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) license.
 
 ## Run it
 

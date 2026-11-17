@@ -28,6 +28,12 @@ button.addEventListener("click", () => {
   getWeather(city);
 });
 
+cityInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    button.click();
+  }
+});
+
 async function getWeather(city) {
   statusDiv.textContent = "Loading...";
   statusDiv.className = "is-loading";
