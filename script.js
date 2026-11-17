@@ -44,6 +44,11 @@ async function getWeather(city) {
     const geoResponse = await fetch(
       `${geoURL}?name=${encodeURIComponent(city)}&count=1`
     );
+
+    if (!geoResponse.ok) {
+      throw new Error(`Geocoding API error: ${geoResponse.status}`);
+    }
+
     const geoData = await geoResponse.json();
 
     if (!geoData.results || geoData.results.length === 0) {
