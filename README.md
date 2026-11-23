@@ -7,6 +7,7 @@ A weather app for any city, built with plain HTML, CSS and JavaScript. Type a ci
 ## Features
 
 * Search any city by name (press Enter or click the button)
+* Search suggestions appear as you type a city or country, so you can pick the exact place
 * Current temperature, weather condition, feels-like, humidity, wind, chance of rain, sunrise and sunset
 * High and low for today
 * Hourly strip for the next 24 hours

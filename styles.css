@@ -42,6 +42,8 @@ input:focus-visible,
 /* ---------- Top bar ---------- */
 
 .topbar {
+  position: relative;
+  z-index: 5;
   max-width: 1100px;
   width: 100%;
   margin: 0 auto;
@@ -77,8 +79,14 @@ input:focus-visible,
   white-space: nowrap;
 }
 
-#cityInput {
+.search-field {
+  position: relative;
   flex: 1;
+  min-width: 0;
+}
+
+#cityInput {
+  display: block;
   min-width: 0;
   width: 100%;
   padding: 0.75rem 1rem;
@@ -95,6 +103,60 @@ input:focus-visible,
 
 #cityInput:focus-visible {
   border-color: #1d4ed8;
+}
+
+#citySuggestions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 20;
+  margin: 0;
+  padding: 0.3rem 0;
+  list-style: none;
+  background-color: #fff;
+  border: 1px solid #b9b2a3;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(29, 35, 39, 0.12);
+  max-height: 16rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#citySuggestions[hidden] {
+  display: none;
+}
+
+#citySuggestions [role="option"] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0.5rem;
+  padding: 0.6rem 0.9rem;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+#citySuggestions [role="option"]:hover,
+#citySuggestions [role="option"].is-active {
+  background-color: #e8f2f1;
+}
+
+#citySuggestions [role="option"]:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: -2px;
+}
+
+.suggest-name {
+  font-weight: 700;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.suggest-meta {
+  font-size: 0.875rem;
+  color: var(--muted);
+  overflow-wrap: anywhere;
 }
 
 #getWeatherBtn {

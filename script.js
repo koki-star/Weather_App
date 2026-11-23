@@ -391,9 +391,204 @@ async function showPhoto(place, id) {
   photoEl.src = photo.src;
 }
 
+// ---------- City suggestions ----------
+
+const suggestList = document.getElementById("citySuggestions");
+let suggestTimer = null;
+let suggestController = null;
+let suggestSeq = 0;
+let suggestions = [];
+let activeIndex = -1;
+
+function isPlace(value) {
+  return Boolean(
+    value &&
+      typeof value === "object" &&
+      typeof value.latitude === "number" &&
+      typeof value.longitude === "number" &&
+      value.name
+  );
+}
+
+function placeRegion(place) {
+  return [place.admin1, place.country].filter(Boolean).join(", ");
+}
+
+function placeInputValue(place) {
+  return [place.name, place.admin1, place.country].filter(Boolean).join(", ");
+}
+
+function closeSuggestions() {
+  clearTimeout(suggestTimer);
+  suggestTimer = null;
+  suggestSeq += 1;
+  if (suggestController) {
+    suggestController.abort();
+    suggestController = null;
+  }
+  suggestions = [];
+  activeIndex = -1;
+  suggestList.replaceChildren();
+  suggestList.hidden = true;
+  cityInput.setAttribute("aria-expanded", "false");
+  cityInput.removeAttribute("aria-activedescendant");
+}
+
+function setActiveSuggestion(index) {
+  const options = suggestList.querySelectorAll('[role="option"]');
+  options.forEach((option, i) => {
+    const isActive = i === index;
+    option.classList.toggle("is-active", isActive);
+    option.setAttribute("aria-selected", isActive ? "true" : "false");
+  });
+  activeIndex = index;
+  if (index >= 0 && options[index]) {
+    cityInput.setAttribute("aria-activedescendant", options[index].id);
+    options[index].scrollIntoView({ block: "nearest" });
+  } else {
+    cityInput.removeAttribute("aria-activedescendant");
+  }
+}
+
+function renderSuggestions(results) {
+  suggestList.replaceChildren();
+  suggestions = results;
+  activeIndex = -1;
+  cityInput.removeAttribute("aria-activedescendant");
+
+  if (!results.length) {
+    suggestList.hidden = true;
+    cityInput.setAttribute("aria-expanded", "false");
+    return;
+  }
+
+  results.forEach((place, i) => {
+    const option = document.createElement("li");
+    option.id = `city-option-${i}`;
+    option.setAttribute("role", "option");
+    option.setAttribute("aria-selected", "false");
+
+    const name = document.createElement("span");
+    name.className = "suggest-name";
+    name.textContent = place.name;
+
+    const meta = document.createElement("span");
+    meta.className = "suggest-meta";
+    meta.textContent = placeRegion(place);
+
+    option.appendChild(name);
+    option.appendChild(meta);
+
+    option.addEventListener("mousedown", (event) => {
+      event.preventDefault();
+      selectSuggestion(place);
+    });
+    option.addEventListener("mouseenter", () => {
+      setActiveSuggestion(i);
+    });
+
+    suggestList.appendChild(option);
+  });
+
+  suggestList.hidden = false;
+  cityInput.setAttribute("aria-expanded", "true");
+}
+
+function selectSuggestion(place) {
+  cityInput.value = placeInputValue(place);
+  closeSuggestions();
+  getWeather(place);
+}
+
+function rankSuggestions(results) {
+  if (!results.length) return [];
+  const topName = (results[0].name || "").toLowerCase();
+  const sameName = [];
+  const rest = [];
+  for (const place of results) {
+    if ((place.name || "").toLowerCase() === topName) sameName.push(place);
+    else rest.push(place);
+  }
+  // Show other cities with the same name first, so a search like "Par"
+  // can include both Paris, France and Paris, Texas in the short list.
+  return sameName.concat(rest).slice(0, 6);
+}
+
+async function fetchSuggestions(query, signal) {
+  // Request extra matches, then keep a short ranked list of 6.
+  const url = `${geoURL}?name=${encodeURIComponent(query)}&count=20&language=en&format=json`;
+  const response = await fetch(url, { signal });
+  if (!response.ok) throw new Error(`Geocoding API error: ${response.status}`);
+  const data = await response.json();
+  const results = Array.isArray(data.results) ? data.results : [];
+  return rankSuggestions(results);
+}
+
+function scheduleSuggestions() {
+  clearTimeout(suggestTimer);
+  const query = cityInput.value.trim();
+  if (query.length < 2) {
+    closeSuggestions();
+    return;
+  }
+
+  suggestTimer = setTimeout(async () => {
+    const seq = ++suggestSeq;
+    if (suggestController) suggestController.abort();
+    suggestController = new AbortController();
+    const { signal } = suggestController;
+
+    try {
+      const results = await fetchSuggestions(query, signal);
+      if (seq !== suggestSeq) return;
+      renderSuggestions(results);
+    } catch (error) {
+      if (error.name === "AbortError") return;
+      if (seq !== suggestSeq) return;
+      closeSuggestions();
+    }
+  }, 250);
+}
+
+cityInput.addEventListener("input", scheduleSuggestions);
+
+cityInput.addEventListener("keydown", (event) => {
+  const open = !suggestList.hidden && suggestions.length > 0;
+
+  if (event.key === "ArrowDown") {
+    if (!open) return;
+    event.preventDefault();
+    const next = activeIndex < suggestions.length - 1 ? activeIndex + 1 : 0;
+    setActiveSuggestion(next);
+  } else if (event.key === "ArrowUp") {
+    if (!open) return;
+    event.preventDefault();
+    const next = activeIndex > 0 ? activeIndex - 1 : suggestions.length - 1;
+    setActiveSuggestion(next);
+  } else if (event.key === "Enter") {
+    if (open && activeIndex >= 0) {
+      event.preventDefault();
+      selectSuggestion(suggestions[activeIndex]);
+    }
+  } else if (event.key === "Escape") {
+    if (open) {
+      event.preventDefault();
+      closeSuggestions();
+    }
+  }
+});
+
+document.addEventListener("click", (event) => {
+  const field = cityInput.closest(".search-field");
+  if (field && !field.contains(event.target)) {
+    closeSuggestions();
+  }
+});
+
 // ---------- Search ----------
 
-async function getWeather(city) {
+async function getWeather(cityOrPlace) {
+  closeSuggestions();
   const id = ++requestId;
   setStatus("Loading...", "loading");
   button.disabled = true;
@@ -402,7 +597,7 @@ async function getWeather(city) {
   resultsEl.setAttribute("aria-busy", "true");
 
   try {
-    const place = await fetchPlace(city);
+    const place = isPlace(cityOrPlace) ? cityOrPlace : await fetchPlace(cityOrPlace);
     if (id !== requestId) return;
 
     if (!place) {
@@ -441,6 +636,7 @@ async function getWeather(city) {
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
+  closeSuggestions();
   const city = cityInput.value.trim();
 
   if (city === "") {

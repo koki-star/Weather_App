@@ -13,7 +13,20 @@
     <h1 class="brand">Weather</h1>
     <form id="searchForm" class="search" novalidate>
       <label for="cityInput">City</label>
-      <input id="cityInput" type="text" placeholder="Type a city (ex: Seattle)" autocomplete="off" />
+      <div class="search-field">
+        <input
+          id="cityInput"
+          type="text"
+          placeholder="Type a city (ex: Seattle)"
+          autocomplete="off"
+          role="combobox"
+          aria-expanded="false"
+          aria-controls="citySuggestions"
+          aria-autocomplete="list"
+          aria-haspopup="listbox"
+        />
+        <ul id="citySuggestions" role="listbox" hidden></ul>
+      </div>
       <button id="getWeatherBtn" type="submit">Get Weather</button>
     </form>
   </header>
