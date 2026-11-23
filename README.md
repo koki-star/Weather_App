@@ -1,49 +1,46 @@
 # Weather App
 
-College assignment (Application Development, North Seattle College). A one-page weather app in plain HTML, CSS, and JavaScript. You type a city name and it shows the current temperature and wind speed.
+A weather app for any city, built with plain HTML, CSS and JavaScript. Type a city and see the current weather, the next 24 hours and a 7-day forecast, with a photo of the city. I made it for my Application Development class at North Seattle College.
 
-Live demo: https://koki-star.github.io/Weather_App/
-
-The app calls the Open-Meteo geocoding API to turn the city name into latitude and longitude, then calls the Open-Meteo forecast API with those coordinates.
+**Live demo:** https://koki-star.github.io/Weather_App/
 
 ## Features
 
-* Search weather by city name
-* Temperature in Fahrenheit and wind speed in mph
-* Seattle loads by default when the page opens
-* Loading state while a request is running
-* Press Enter or click the button to search
-* Error messages for blank input, unknown city, and failed requests
-
-## How it works
-
-1. You enter a city name.
-2. The app requests latitude and longitude from the geocoding API.
-3. It requests current weather for those coordinates.
-4. Temperature, location, and wind speed appear in the weather card.
+* Search any city by name (press Enter or click the button)
+* Current temperature, weather condition, feels-like, humidity, wind, chance of rain, sunrise and sunset
+* High and low for today
+* Hourly strip for the next 24 hours
+* 7-day forecast with a temperature range bar
+* City photo with a credit line, shown only when the photo has a free license
+* Seattle loads by default
+* Clear messages for an empty search, an unknown city and a failed request
+* Works on phone, tablet and desktop, with visible keyboard focus
 
 ## Built with
 
-* HTML
-* CSS
-* JavaScript (async/await, fetch)
-* Open-Meteo API (no API key needed)
+* HTML, CSS and JavaScript (async/await, fetch), no frameworks
+* [Open-Meteo](https://open-meteo.com/) geocoding and forecast APIs (no API key needed)
+* Wikipedia and Wikimedia Commons APIs for the city photos
+* Inline SVG icons
 
-## Credit
+## How it works
 
-Weather data by [Open-Meteo.com](https://open-meteo.com/), used under the [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) license.
+1. The geocoding API turns the city name into coordinates.
+2. The forecast API returns the current, hourly and daily weather for those coordinates in the city's own time zone.
+3. The app finds the city's Wikipedia page and checks that its coordinates match the city. This avoids the wrong "Paris".
+4. It reads the photo's license and author from Wikimedia Commons. Only CC BY, CC BY-SA, CC0 and public domain photos are shown. If a photo is missing or not free, the page shows no photo.
+5. All data is added to the page with `textContent`, never `innerHTML`.
 
 ## Run it
 
 1. Clone the repository.
 2. Open `index.html` in a browser.
-3. Search for a city.
 
-## Manual checks
+## Credits
 
-I tested these by hand. There is no automated test suite in this project.
+* Weather data by [Open-Meteo.com](https://open-meteo.com/), licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+* City photos come from [Wikimedia Commons](https://commons.wikimedia.org/). Each photo keeps its own license, and the author and license are shown under the photo with a link to its page.
 
-* Normal: Seattle, London, Tokyo
-* Blank input
-* Text that is not a city, for example `asdfasdf`
-* A very long invalid city name
+## Testing
+
+There is no automated test suite. These cases were checked in Chrome: Seattle, Tokyo, Paris, Nairobi, an empty search, and text that is not a city (`asdfasdf`), on phone and desktop widths.
